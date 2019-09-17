@@ -5,8 +5,6 @@ import random
 
 _fps = 60
 
-
-
 class Nave(pg.sprite.Sprite):
     x = 0
     y = 0
@@ -46,6 +44,14 @@ class Nave(pg.sprite.Sprite):
         self.rect.x = self.x
         self.rect.y = self.y
 
+    def comprobarChoque(self, spriteGroup):
+        if pg.sprite.spritecollide(self, spriteGroup, False):
+            self.dirx = self.dirx * -1
+            self.x += self.dirx * self.w
+
+            if self.velocidad <= 14:
+                self.velocidad += 0.5 
+
 class Meteorito(pg.sprite.Sprite):
     x = 1150
     y = random.randrange(5,120)
@@ -59,6 +65,7 @@ class Meteorito(pg.sprite.Sprite):
         self.image = pg.image.load(os.getcwd()+"/assets/comet.png")
         self.rect = self.image.get_rect()
 
+
     def update(self):
         self.x += self.dirx * self.velocidad
         self.y += self.diry * self.velocidad
@@ -71,6 +78,8 @@ class Meteorito(pg.sprite.Sprite):
         
         self.rect.x = self.x
         self.rect.y = self.y
+
+    
 
 class Meteorito2(pg.sprite.Sprite):
     x = 1150
@@ -152,7 +161,7 @@ class Meteorito4(pg.sprite.Sprite):
 
 class Meteorito5(pg.sprite.Sprite):
     x = 1150
-    y = random.randrange(615,700)
+    y = random.randrange(615,640)
     velocidad = random.randrange(2, 5)
     dirx = random.randint(1, 1)
     diry = random.randint(0, 0)
@@ -205,6 +214,14 @@ class Game:
 
         self.allSprites.add(self.player)
 
+        self.player.comprobarChoque(self.meteorito)
+        self.player.comprobarChoque(self.meteorito2)
+        self.player.comprobarChoque(self.meteorito3)
+        self.player.comprobarChoque(self.meteorito4)
+        self.player.comprobarChoque(self.meteorito5)
+        
+
+
     def gameover(self):
         pg.quit()
         sys.exit()
@@ -240,7 +257,7 @@ class Game:
 
     def render(self):
         
-        self.screen.fill((60,60,60))
+        self.screen.fill((100,50,100))
 
         self.allSprites.update()
         self.allSprites.draw(self.screen)
